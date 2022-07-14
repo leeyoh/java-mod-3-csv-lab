@@ -30,9 +30,6 @@ public class ScannerSingleton {
             }
         } catch (Exception e){
             System.out.println("Invalid Number");
-            System.out.print(":");
-            scanner.nextLine();
-            getInt(limit);
         }
         scanner.nextLine();
         return choice;
@@ -103,8 +100,7 @@ public class ScannerSingleton {
                 break;
             default:
                 System.out.println("Invalid Month");
-                System.out.print(":");
-                getMonth();
+                input2 = "0";
         }
         return input2;
     }

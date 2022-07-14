@@ -58,7 +58,13 @@ public class FileManagerSingleton {
             e.printStackTrace();
         }
     }
-    public void appendToFile(String fileName, StringBuffer values) throws FileNotFoundException {
-        throw new FileNotFoundException();
+    public void appendToFile(String fileName, StringBuffer values) {
+        System.out.println(fileName);
+        try(FileWriter myObj = new FileWriter(fileName,true)){
+            myObj.append(values);
+            myObj.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+        }
     }
 }

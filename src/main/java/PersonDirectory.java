@@ -5,18 +5,35 @@ import java.util.List;
 public class PersonDirectory {
     private List<Person> personalList = new ArrayList<Person>();
     private List<Person> oldList = new ArrayList<Person>();
-    private List<Person> newList = new ArrayList<Person>();
+
     private FileManagerSingleton fm;
 
-    void PersonDirectory(){
+    public PersonDirectory(){
         fm = FileManagerSingleton.getInstance();
     }
-
+    public void saveToFile(String fileName){
+        StringBuffer persons = new StringBuffer();
+        personalList.forEach((person) ->{
+            persons.append(person.formatAsCSV());
+            persons.append("\n");
+        });
+        fm.appendToFile(fileName,persons);
+    }
+    public void printDirectory(){
+        oldList.forEach((person) ->{
+            System.out.println(person);
+        });
+        personalList.forEach((person) ->{
+            System.out.println(person);
+        });
+    }
     public void loadDirectory(String fileName) throws IOException {
         try{
             List<String> tempList = new ArrayList<String>();
-            fm.readFromFile(fileName);
-            System.out.println(tempList);
+            tempList = fm.readFromFile(fileName);
+            tempList.forEach((csvPerson) -> {
+                oldList.add(new Person(csvPerson));
+            });
         }catch(Exception e){
             throw e;
         }

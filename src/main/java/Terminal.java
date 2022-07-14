@@ -1,4 +1,8 @@
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.List;
 
 public class Terminal {
@@ -9,12 +13,11 @@ public class Terminal {
 
     private static String fileName = "list.csv";
     private static final String path = "data/";
-
+    private static String filePath = path + fileName;
     public static void main(String[] args) {
         initializeObjects();
-        addPerson();
-       // loadFile();
-        //chooseOptions();
+        loadFile();
+        chooseOptions();
         if(sc != null) {
             sc.close();
         }
@@ -35,12 +38,17 @@ public class Terminal {
         switch(sc.getInt(3)){
             case 1:
                 //Add Person to List
+                addPerson();
+                chooseOptions();
                 break;
             case 2:
                 //List the current list of people, old + new
+                pd.printDirectory();
+                chooseOptions();
                 break;
             case 3:
                 //Append List to file then close program
+                pd.saveToFile(filePath);
                 break;
             default:
                 chooseOptions();
@@ -64,43 +72,83 @@ public class Terminal {
         lastName = sc.getNextLine();
 
         log.log("BirthDay");
-        log.prompt("Year: ");
-        year = String.valueOf(sc.getInt(9999));
+        year = getYear();
+        month = getMonth();
+        day = getDay(year,month);
 
-        log.prompt("Month: ");
-        month = sc.getMonth();
-
-        log.prompt("Day: ");
-        day = sc.getNextLine();
-
+        pd.addPerson(firstName,lastName,
+                Integer.valueOf(year),
+                Integer.valueOf(month),
+                Integer.valueOf(day));
     }
+    public static String getYear(){
+        log.prompt("Year: ");
+        int year = sc.getInt(9999);
+        if(year < 1){
+            getYear();
+        }
+        return String.valueOf(year);
+    }
+
+    public static String getMonth(){
+        log.prompt("Month: ");
+        String month = sc.getMonth();
+        if(month == "0"){
+            getMonth();
+        }
+        return month;
+    }
+
+    public static String getDay(String year, String month){
+        log.prompt("Day: ");
+        String day = String.valueOf(sc.getInt(31));
+
+        if(!isValid(year + '-' + month + "-" + day)){
+            log.error("Invalid Day");
+            getDay(year,month);
+        }
+        return day;
+    }
+    //https://mkyong.com/java/how-to-check-if-date-is-valid-in-java/
+    public static boolean isValid(final String date) {
+        boolean valid = false;
+        try {
+            // ResolverStyle.STRICT for 30, 31 days checking, and also leap year.
+            LocalDate.parse(date,
+                    DateTimeFormatter.ofPattern("uuuu-M-d")
+                            .withResolverStyle(ResolverStyle.STRICT)
+            );
+            valid = true;
+        } catch (DateTimeParseException e) {
+            //e.printStackTrace();
+            valid = false;
+        }
+        return valid;
+    }
+
     public static void loadPersonal(){
         try{
-            pd.loadDirectory(path + fileName);
+            pd.loadDirectory(filePath);
         }catch (Exception e){
             System.out.println(e);
         }
-    }
-    public static void appendToList(){
-
     }
     public static void loadFile(){
         try{
             log.log("Files in Directory:");
             List<String> files = fm.listFilesUsingJavaIO("data");
             if(files.isEmpty()){
-                log.log("Created New File: " + fileName);
-                fm.createFile(path + fileName);
+                log.log("Created New File: " + filePath);
+                fm.createFile(filePath);
             } else {
                 fileName = files.get(0);
-                log.log("Loaded " + fileName);
+                log.log("Loaded " + filePath);
                 loadPersonal();
             }
         } catch(Exception e){
             System.out.println(e);
         }
     }
-
     public static void clearScreen(){
         final int MAX_LINES = 50;
         for(int i = 0; i < MAX_LINES; i++){

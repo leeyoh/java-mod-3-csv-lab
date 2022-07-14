@@ -17,8 +17,11 @@ public class LoggerSingleton {
         public void prompt(String message){
             System.out.print(c.GREEN + message + c.RESET );
         }
+        public void error(String message){
+            System.out.println(c.RED + message + c.RESET);
+        }
         public void log(String message) {
             currentLine++;
-            System.out.println(c.RED + currentLine + c.RESET + "::" + message);
+            System.out.println(c.BLUE + currentLine + c.RESET + "::" + message);
         }
 }
