@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,8 +27,7 @@ public class FileManagerSingleton {
      */
     public List<String> readFromFile(String fileName) throws IOException {
         //https://stackoverflow.com/questions/14169661/read-complete-file-without-using-loop-in-java
-        Path of = Path.of(fileName);
-        List<String> lines = Files.readAllLines(of, StandardCharsets.UTF_8);
+        List<String> lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
         return lines;
     }
 
@@ -53,13 +49,10 @@ public class FileManagerSingleton {
     }
 
     public void createFile(String fileName){
+        FileWriter myObj;
         try {
-            File myObj = new File(fileName);
-            if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
-            } else {
-                System.out.println("File already exists.");
-            }
+            myObj = new FileWriter(fileName);
+            System.out.println("File created ");
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

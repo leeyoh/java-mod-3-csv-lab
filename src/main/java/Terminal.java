@@ -7,13 +7,17 @@ public class Terminal {
     private static LoggerSingleton log;
     private static FileManagerSingleton fm;
 
-    private static String fileName = "PersonalList.CSV";
+    private static String fileName = "list.csv";
     private static final String path = "data/";
 
     public static void main(String[] args) {
         initializeObjects();
-        loadFile();
-        chooseOptions();
+        addPerson();
+       // loadFile();
+        //chooseOptions();
+        if(sc != null) {
+            sc.close();
+        }
     }
 
     public static void initializeObjects(){
@@ -24,23 +28,62 @@ public class Terminal {
     }
 
     public static void chooseOptions(){
-        log.log("1: Add a person to the list");
-        log.log("2: Print a list of current persons");
-        log.log("3: Exit the program");
-
+        log.log(" [ 1 ] Add a person to the list");
+        log.log(" [ 2 ] Print a list of current persons");
+        log.log(" [ 3 ] Exit the program");
+        log.prompt(":");
         switch(sc.getInt(3)){
             case 1:
+                //Add Person to List
                 break;
             case 2:
+                //List the current list of people, old + new
                 break;
             case 3:
+                //Append List to file then close program
                 break;
             default:
                 chooseOptions();
                 break;
         }
     }
+    /**
+     * First Name ( String )
+     * Last Name
+     * Birth Year
+     * Birth Month
+     * Birth Day
+     */
+    public static void addPerson(){
+        String firstName,lastName,year,month,day;
 
+        log.prompt("First Name: ");
+        firstName = sc.getNextLine();
+
+        log.prompt("Last Name: ");
+        lastName = sc.getNextLine();
+
+        log.log("BirthDay");
+        log.prompt("Year: ");
+        year = String.valueOf(sc.getInt(9999));
+
+        log.prompt("Month: ");
+        month = sc.getMonth();
+
+        log.prompt("Day: ");
+        day = sc.getNextLine();
+
+    }
+    public static void loadPersonal(){
+        try{
+            pd.loadDirectory(path + fileName);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+    public static void appendToList(){
+
+    }
     public static void loadFile(){
         try{
             log.log("Files in Directory:");
@@ -51,6 +94,7 @@ public class Terminal {
             } else {
                 fileName = files.get(0);
                 log.log("Loaded " + fileName);
+                loadPersonal();
             }
         } catch(Exception e){
             System.out.println(e);

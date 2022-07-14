@@ -4,6 +4,8 @@ import java.util.List;
 
 public class PersonDirectory {
     private List<Person> personalList = new ArrayList<Person>();
+    private List<Person> oldList = new ArrayList<Person>();
+    private List<Person> newList = new ArrayList<Person>();
     private FileManagerSingleton fm;
 
     void PersonDirectory(){
@@ -12,7 +14,9 @@ public class PersonDirectory {
 
     public void loadDirectory(String fileName) throws IOException {
         try{
-            fm.readFromFile("./data/" + fileName);
+            List<String> tempList = new ArrayList<String>();
+            fm.readFromFile(fileName);
+            System.out.println(tempList);
         }catch(Exception e){
             throw e;
         }
